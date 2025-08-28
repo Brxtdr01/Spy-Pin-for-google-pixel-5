@@ -1,6 +1,8 @@
+<!DOCTYPE html>
+<html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Fake Pixel 5 Lock</title>
+  <title>Pixel 5 Fake Lock</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <style>
     html, body {
@@ -9,6 +11,7 @@
       overflow: hidden;
       font-family: sans-serif;
     }
+
     .screen {
       position: relative;
       width: 100%; height: 100%;
@@ -16,22 +19,23 @@
       background-repeat: no-repeat;
       background-position: center;
     }
+
     #lockscreen {
-      background-image: url('sreen.png');
+      background-image: url('sreen.png'); /* ton image d'écran verrouillé */
     }
+
     #home {
-      background-image: url('Fond.png');
+      background-image: url('Fond.png');  /* ton fond déverrouillé */
       display: none;
     }
 
-    /* >>> C’est ici que tu colles le nouveau code <<< */
     .keypad {
       position: absolute;
-      bottom: 120px;     
+      bottom: 120px;       /* ajuste selon ton image */
       left: 50%;
       transform: translateX(-50%);
-      width: 80%;
-      max-width: 350px;
+      width: 80%;          /* largeur plus grande */
+      max-width: 350px;    /* évite que ça dépasse */
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       grid-template-rows: repeat(4, 1fr);
@@ -43,9 +47,54 @@
       aspect-ratio: 1/1;
       border-radius: 50%;
       border: none;
-      background: transparent;
+      background: transparent; /* invisible mais cliquable */
       cursor: pointer;
-      padding: 15px;
+      padding: 15px;           /* hitbox plus grande */
     }
   </style>
 </head>
+<body>
+
+  <!-- Écran verrouillé -->
+  <div id="lockscreen" class="screen">
+    <div class="keypad">
+      <button class="btn" data-num="1"></button>
+      <button class="btn" data-num="2"></button>
+      <button class="btn" data-num="3"></button>
+      <button class="btn" data-num="4"></button>
+      <button class="btn" data-num="5"></button>
+      <button class="btn" data-num="6"></button>
+      <button class="btn" data-num="7"></button>
+      <button class="btn" data-num="8"></button>
+      <button class="btn" data-num="9"></button>
+      <div></div>
+      <button class="btn" data-num="0"></button>
+      <div></div>
+    </div>
+  </div>
+
+  <!-- Écran déverrouillé -->
+  <div id="home" class="screen"></div>
+
+  <script>
+    const lockscreen = document.getElementById("lockscreen");
+    const home = document.getElementById("home");
+    const buttons = document.querySelectorAll(".btn");
+    let code = "";
+
+    buttons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        if (code.length < 6) {
+          code += btn.dataset.num;
+        }
+        if (code.length === 6) {
+          // Après 6 chiffres, on "déverrouille"
+          lockscreen.style.display = 'none';
+          home.style.display = 'block';
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
