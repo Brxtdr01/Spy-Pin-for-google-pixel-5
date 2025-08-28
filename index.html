@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Pixel 5 Lockscreen Fake</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      font-family: sans-serif;
+    }
+
+    .screen {
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+
+    #lockscreen {
+      background-image: url('sreen.png'); /* ton image lock */
+    }
+
+    #home {
+      background-image: url('Fond.png');  /* ton fond déverrouillé */
+      display: none;
+    }
+
+    /* grille invisible par-dessus le pavé numérique */
+    .keypad {
+      position: absolute;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 70%;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-gap: 15px;
+    }
+
+    .btn {
+      aspect-ratio: 1/1;
+      border-radius: 50%;
+      background: rgba(0,0,0,0); /* invisible */
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- écran verrouillé -->
+  <div id="lockscreen" class="screen">
+    <div class="keypad">
+      <button class="btn" data-num="1"></button>
+      <button class="btn" data-num="2"></button>
+      <button class="btn" data-num="3"></button>
+      <button class="btn" data-num="4"></button>
+      <button class="btn" data-num="5"></button>
+      <button class="btn" data-num="6"></button>
+      <button class="btn" data-num="7"></button>
+      <button class="btn" data-num="8"></button>
+      <button class="btn" data-num="9"></button>
+      <div></div>
+      <button class="btn" data-num="0"></button>
+      <div></div>
+    </div>
+  </div>
+
+  <!-- écran déverrouillé -->
+  <div id="home" class="screen"></div>
+
+  <script>
+    const lockscreen = document.getElementById("lockscreen");
+    const home = document.getElementById("home");
+    const buttons = document.querySelectorAll(".btn");
+    let code = "";
+
+    buttons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        if (code.length < 6) {
+          code += btn.dataset.num;
+        }
+        if (code.length === 6) {
+          // Après 6 chiffres -> affichage du fond
+          lockscreen.style.display = "none";
+          home.style.display = "block";
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
+
