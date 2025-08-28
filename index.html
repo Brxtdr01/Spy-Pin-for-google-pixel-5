@@ -21,25 +21,35 @@
     }
 
     #lockscreen {
-      background-image: url('sreen.png'); /* ton image d'écran verrouillé */
+      background-image: url('sreen.png');
     }
 
     #home {
-      background-image: url('Fond.png');  /* ton fond déverrouillé */
+      background-image: url('Fond.png');
       display: none;
     }
 
-    #pin-dots {
+    /* Overlay des points de PIN */
+    #pin-overlay {
       position: absolute;
-      top: 25%;          /* ajuste en fonction de ton image */
+      top: 30%;             /* ajuste pour caler les points sur ton image */
       left: 50%;
       transform: translateX(-50%);
-      font-size: 2rem;
-      letter-spacing: 12px;
-      color: black;
-      background: rgba(255,255,255,0.6); /* petit fond translucide si tu veux voir les points */
-      border-radius: 10px;
-      padding: 5px 15px;
+      display: flex;
+      gap: 15px;
+    }
+
+    .dot {
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      border: 2px solid black;  /* contour comme sur ton lockscreen */
+      background: transparent;
+      transition: background 0.3s;
+    }
+
+    .dot.filled {
+      background: black;        /* rempli quand chiffre saisi */
     }
 
     .keypad {
@@ -70,7 +80,15 @@
 
   <!-- Écran verrouillé -->
   <div id="lockscreen" class="screen">
-    <div id="pin-dots">○ ○ ○ ○ ○ ○</div>
+    <div id="pin-overlay">
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
+
     <div class="keypad">
       <button class="btn" data-num="1"></button>
       <button class="btn" data-num="2"></button>
@@ -94,12 +112,17 @@
     const lockscreen = document.getElementById("lockscreen");
     const home = document.getElementById("home");
     const buttons = document.querySelectorAll(".btn");
-    const pinDots = document.getElementById("pin-dots");
+    const dots = document.querySelectorAll(".dot");
     let code = "";
 
     function updateDots() {
-      let dots = "● ".repeat(code.length) + "○ ".repeat(6 - code.length);
-      pinDots.textContent = dots.trim();
+      dots.forEach((dot, index) => {
+        if (index < code.length) {
+          dot.classList.add("filled");
+        } else {
+          dot.classList.remove("filled");
+        }
+      });
     }
 
     buttons.forEach(btn => {
@@ -110,8 +133,10 @@
         }
         if (code.length === 6) {
           // Après 6 chiffres, on "déverrouille"
-          lockscreen.style.display = 'none';
-          home.style.display = 'block';
+          setTimeout(() => {
+            lockscreen.style.display = 'none';
+            home.style.display = 'block';
+          }, 300);
         }
       });
     });
