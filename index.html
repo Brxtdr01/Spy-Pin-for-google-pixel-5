@@ -29,13 +29,26 @@
       display: none;
     }
 
-    .keypad {
+    #pin-dots {
       position: absolute;
-      bottom: 120px;       /* ajuste selon ton image */
+      top: 25%;          /* ajuste en fonction de ton image */
       left: 50%;
       transform: translateX(-50%);
-      width: 80%;          /* largeur plus grande */
-      max-width: 350px;    /* évite que ça dépasse */
+      font-size: 2rem;
+      letter-spacing: 12px;
+      color: black;
+      background: rgba(255,255,255,0.6); /* petit fond translucide si tu veux voir les points */
+      border-radius: 10px;
+      padding: 5px 15px;
+    }
+
+    .keypad {
+      position: absolute;
+      bottom: 120px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80%;
+      max-width: 350px;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       grid-template-rows: repeat(4, 1fr);
@@ -47,9 +60,9 @@
       aspect-ratio: 1/1;
       border-radius: 50%;
       border: none;
-      background: transparent; /* invisible mais cliquable */
+      background: transparent;
       cursor: pointer;
-      padding: 15px;           /* hitbox plus grande */
+      padding: 15px;
     }
   </style>
 </head>
@@ -57,6 +70,7 @@
 
   <!-- Écran verrouillé -->
   <div id="lockscreen" class="screen">
+    <div id="pin-dots">○ ○ ○ ○ ○ ○</div>
     <div class="keypad">
       <button class="btn" data-num="1"></button>
       <button class="btn" data-num="2"></button>
@@ -80,12 +94,19 @@
     const lockscreen = document.getElementById("lockscreen");
     const home = document.getElementById("home");
     const buttons = document.querySelectorAll(".btn");
+    const pinDots = document.getElementById("pin-dots");
     let code = "";
+
+    function updateDots() {
+      let dots = "● ".repeat(code.length) + "○ ".repeat(6 - code.length);
+      pinDots.textContent = dots.trim();
+    }
 
     buttons.forEach(btn => {
       btn.addEventListener("click", () => {
         if (code.length < 6) {
           code += btn.dataset.num;
+          updateDots();
         }
         if (code.length === 6) {
           // Après 6 chiffres, on "déverrouille"
