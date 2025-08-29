@@ -2,43 +2,70 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Fake Pixel 5 Lock</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pixel 5 Lock</title>
   <style>
-    html, body {
-      margin: 0; padding: 0;
-      width: 100%; height: 100%;
-      overflow: hidden;
-      font-family: sans-serif;
+    body {
+      margin: 0;
+      background: black;
     }
-    .screen {
-      position: relative;
-      width: 100%; height: 100%;
-      background-size: contain;
-      background-repeat: no-repeat;
-      background-position: center;
-    }
+
     #lockscreen {
-      background-image: url('sreen_resized (Copie).png');
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
     }
-    #home {
-      background-image: url('Fond.png');
-      display: none;
+
+    #lockscreen img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
     }
+
+    /* Overlay des points PIN */
+    #pin-overlay {
+      position: absolute;
+      top: 29.5%;        /* ajuste la hauteur */
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 20px;         /* espace entre les ronds */
+    }
+
+    .dot {
+      width: 24px;       /* taille des ronds alignée */
+      height: 24px;
+      border-radius: 50%;
+      background: transparent;
+      border: 2px solid rgba(255,255,255,0.6);
+      transition: background 0.3s;
+    }
+
+    .dot.filled {
+      background: white;
+      border: 2px solid white;
+    }
+
+    /* Keypad invisible mais clickable */
     .keypad {
       position: absolute;
-      /*  ajuster ces valeurs pour correspondre exactement à ton image lockscreen */
-      top: 50%; left: 50%;
-      width: 260px; height: 350px;
-      transform: translate(-50%, -45%);
+      bottom: 11%;     
+      left: 50%;
+      transform: translateX(-50%);
+      width: 75%;
+      max-width: 320px;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       grid-template-rows: repeat(4, 1fr);
-      gap: 10px;
-      /* montre les zones pour déboguer, en prod on rend invisible : background: rgba(255,0,0,0.3); */
-      background: rgba(255,0,0,0.2);
+      gap: 18px;
     }
+
     .btn {
+      width: 100%;
+      aspect-ratio: 1/1;
+      border-radius: 50%;
       border: none;
       background: transparent;
       cursor: pointer;
@@ -46,42 +73,56 @@
   </style>
 </head>
 <body>
-
-  <div id="lockscreen" class="screen">
+  <div id="lockscreen">
+    <img src="sreen.png" alt="lockscreen">
+    <div id="pin-overlay">
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
     <div class="keypad">
-      <button class="btn" data-num="1"></button>
-      <button class="btn" data-num="2"></button>
-      <button class="btn" data-num="3"></button>
-      <button class="btn" data-num="4"></button>
-      <button class="btn" data-num="5"></button>
-      <button class="btn" data-num="6"></button>
-      <button class="btn" data-num="7"></button>
-      <button class="btn" data-num="8"></button>
-      <button class="btn" data-num="9"></button>
+      <button class="btn" onclick="press(1)"></button>
+      <button class="btn" onclick="press(2)"></button>
+      <button class="btn" onclick="press(3)"></button>
+      <button class="btn" onclick="press(4)"></button>
+      <button class="btn" onclick="press(5)"></button>
+      <button class="btn" onclick="press(6)"></button>
+      <button class="btn" onclick="press(7)"></button>
+      <button class="btn" onclick="press(8)"></button>
+      <button class="btn" onclick="press(9)"></button>
       <div></div>
-      <button class="btn" data-num="0"></button>
+      <button class="btn" onclick="press(0)"></button>
       <div></div>
     </div>
   </div>
 
-  <div id="home" class="screen"></div>
-
   <script>
-    const lockscreen = document.getElementById("lockscreen");
-    const home = document.getElementById("home");
-    const buttons = document.querySelectorAll(".btn");
+    const dots = document.querySelectorAll("#pin-overlay .dot");
     let code = "";
 
-    buttons.forEach(btn => {
-      btn.addEventListener("click", () => {
-        if (code.length < 6) code += btn.dataset.num;
-        if (code.length === 6) {
-          lockscreen.style.display = 'none';
-          home.style.display = 'block';
+    function press(num) {
+      if (code.length < 6) {
+        code += num;
+        updateDots();
+      }
+      if (code.length === 6) {
+        // Changement de fond quand code complet
+        document.body.innerHTML = '<img src="Fond.png" style="width:100%; height:100vh; object-fit:cover;">';
+      }
+    }
+
+    function updateDots() {
+      dots.forEach((dot, index) => {
+        if (index < code.length) {
+          dot.classList.add("filled");
+        } else {
+          dot.classList.remove("filled");
         }
       });
-    });
+    }
   </script>
-
 </body>
 </html>
