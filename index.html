@@ -2,17 +2,22 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Pixel 5 Lock</title>
   <style>
     body {
       margin: 0;
       background: black;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
     #lockscreen {
       position: relative;
       width: 100%;
+      max-width: 420px;   /* largeur max comme un Pixel 5 */
       height: 100vh;
       overflow: hidden;
     }
@@ -20,37 +25,38 @@
     #lockscreen img {
       width: 100%;
       height: 100%;
-      object-fit: contain;
+      object-fit: cover;
     }
 
-    /* Overlay des points PIN (alignés sur l'image Pixel 5) */
+    /* --- Points PIN --- */
     #pin-overlay {
       position: absolute;
-      top: 32%;        /* position verticale adaptée */
+      top: 29%;         /* ajuste verticalement */
       left: 50%;
       transform: translateX(-50%);
       display: flex;
-      gap: 8px;        /* espace entre les points */
+      gap: 16px;        /* espace entre les ronds */
     }
 
     .dot {
-      width: 12px;
-      height: 12px;
+      width: 16px;
+      height: 16px;
       border-radius: 50%;
       background: transparent;
-      border: 1px solid rgba(255,255,255,0.4); /* pour voir les cercles */
-      transition: background 0.3s;
+      border: 2px solid rgba(255,255,255,0.6);
+      transition: all 0.3s ease;
     }
 
     .dot.filled {
       background: white;
-      border: 1px solid white;
+      border-color: white;
+      transform: scale(1.2); /* petit effet animation */
     }
 
-    /* Keypad */
+    /* --- Keypad --- */
     .keypad {
       position: absolute;
-      bottom: 11%;     /* keypad calé comme sur l’écran */
+      bottom: 12%;
       left: 50%;
       transform: translateX(-50%);
       width: 75%;
@@ -58,7 +64,7 @@
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       grid-template-rows: repeat(4, 1fr);
-      gap: 18px;
+      gap: 22px;
     }
 
     .btn {
@@ -108,7 +114,7 @@
         updateDots();
       }
       if (code.length === 6) {
-        // bascule vers l’autre fond
+        // affiche Fond.png quand 6 chiffres entrés
         document.body.innerHTML = '<img src="Fond.png" style="width:100%; height:100vh; object-fit:cover;">';
       }
     }
