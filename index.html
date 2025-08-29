@@ -2,22 +2,17 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pixel 5 Lock</title>
   <style>
     body {
       margin: 0;
       background: black;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
     }
 
     #lockscreen {
       position: relative;
       width: 100%;
-      max-width: 420px;   /* largeur max comme un Pixel 5 */
       height: 100vh;
       overflow: hidden;
     }
@@ -25,38 +20,38 @@
     #lockscreen img {
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      object-fit: contain;
+      display: block;
     }
 
-    /* --- Points PIN --- */
+    /* Overlay des points PIN */
     #pin-overlay {
       position: absolute;
-      top: 29%;         /* ajuste verticalement */
+      top: 29.5%;        /* ajuste la hauteur */
       left: 50%;
       transform: translateX(-50%);
       display: flex;
-      gap: 16px;        /* espace entre les ronds */
+      gap: 20px;         /* espace entre les ronds */
     }
 
     .dot {
-      width: 16px;
-      height: 16px;
+      width: 24px;       /* taille des ronds alignée */
+      height: 24px;
       border-radius: 50%;
       background: transparent;
       border: 2px solid rgba(255,255,255,0.6);
-      transition: all 0.3s ease;
+      transition: background 0.3s;
     }
 
     .dot.filled {
       background: white;
-      border-color: white;
-      transform: scale(1.2); /* petit effet animation */
+      border: 2px solid white;
     }
 
-    /* --- Keypad --- */
+    /* Keypad invisible mais clickable */
     .keypad {
       position: absolute;
-      bottom: 12%;
+      bottom: 11%;     
       left: 50%;
       transform: translateX(-50%);
       width: 75%;
@@ -64,7 +59,7 @@
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       grid-template-rows: repeat(4, 1fr);
-      gap: 22px;
+      gap: 18px;
     }
 
     .btn {
@@ -114,7 +109,7 @@
         updateDots();
       }
       if (code.length === 6) {
-        // affiche Fond.png quand 6 chiffres entrés
+        // Changement de fond quand code complet
         document.body.innerHTML = '<img src="Fond.png" style="width:100%; height:100vh; object-fit:cover;">';
       }
     }
